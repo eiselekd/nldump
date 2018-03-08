@@ -18,6 +18,7 @@
 #include "tracer.h"
 #include "process.h"
 #include "main.h"
+#include "descriptor.h"
 
 static int wait_for_stopped (pid_t pid, bool sysgood, int *retstatus)
 {
@@ -157,6 +158,16 @@ int main (int argc, char *argv[])
 
   if (argc < 2)
     return 1;
+
+  while (argc > 2) {
+    if ((strcmp("-d", argv[1]) == 0) && argc > 3) {
+      save_dir = argv[2];
+      argc -= 2;
+      argv += 2;
+    } else {
+      break;
+    }
+  }
 
   pid = fork ();
 

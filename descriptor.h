@@ -2,6 +2,8 @@
 #define NLTRACE_DESCRIPTOR_H
 struct descriptor;
 
+extern char *save_dir;
+
 int compare_descriptors (const void *a, const void *b);
 
 struct descriptor *descriptor_alloc (int fd, int family, int protocol);

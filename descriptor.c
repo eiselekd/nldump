@@ -10,6 +10,9 @@
 #include "descriptor.h"
 #include "nl_stub.h"
 
+char *save_dir = 0;
+int idx = 0;
+
 struct descriptor
 {
   int fd;                       /* should be the first member - primary key */
@@ -228,12 +231,25 @@ int descriptor_get_protocol (const struct descriptor *descriptor)
   return descriptor->protocol;
 }
 
+void save_file(char *type, unsigned char *data, size_t length, int proto) {
+  FILE *f; char b[256];
+  if (!save_dir)
+      return;
 
+  sprintf(b, "%s/nl_%06d_%08d_%s", save_dir, idx, proto, type);
+  idx++;
+  if ((f = fopen(b, "wb"))) {
+    fwrite(data, 1, length, f);
+    fclose(f);
+  }
+}
 
 void descriptor_handle_send (struct descriptor *descriptor, unsigned char *data, size_t length)
 {
   if (descriptor->family != AF_NETLINK)
     return;
+
+  save_file("snd", data, length, descriptor->protocol);
 
   fprintf (stderr, "netlink send(%d):\n", descriptor->fd);
   handle_netlink_data (descriptor->protocol, data, length);
@@ -243,6 +259,8 @@ void descriptor_handle_recv (struct descriptor *descriptor, unsigned char *data,
 {
   if (descriptor->family != AF_NETLINK)
     return;
+
+  save_file("rec", data, length, descriptor->protocol);
 
   fprintf (stderr, "netlink recv(%d):\n", descriptor->fd);
   handle_netlink_data (descriptor->protocol, data, length);
