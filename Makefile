@@ -42,4 +42,4 @@ clean:
 
 
 strace:
-	cd strace-4.15; dpkg-buildpackage -us -uc -nc
+	cd strace-4.15; DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -us -uc -nc

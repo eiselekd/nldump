@@ -35,6 +35,7 @@
 #include "native_defs.h"
 #include <sys/param.h>
 #include <signal.h>
+#include <sys/socket.h>         /* AF_NETLINK */
 
 /* for struct iovec */
 #include <sys/uio.h>
@@ -429,9 +430,180 @@ decode_mips_subcall(struct tcb *tcp)
 }
 #endif /* LINUX_MIPSO32 */
 
+
+/*.
+returns:
+-1 on error
+ 0 if given inode is not netlink socket
+ 1 if given inode is netlink socket, writes its protocol to ret_protocol
+*/
+static int scan_proc_net_netlink (unsigned long inode, int *ret_protocol)
+{
+	FILE *netlink;
+	char result[256];
+	/* http://lxr.linux.no/linux+v3.8.8/net/netlink/af_netlink.c#L2055 */
+	static const char *header = "sk       Eth Pid    Groups   Rmem     Wmem     Dump     Locks     Drops     Inode\n";
+	int protocol;
+	unsigned long scanned_inode;
+	int retval = -1;
+
+
+	if (!(netlink = fopen ("/proc/net/netlink", "rte")))
+	{
+		perror ("Opening /proc/net/netlink");
+		goto end;
+	}
+
+	if (!fgets (result, sizeof (result), netlink))
+	{
+		fprintf (stderr, "Error reading header of /proc/net/netlink\n");
+		goto end;
+	}
+
+	if (strcmp (result, header))
+	{
+		fprintf (stderr, "header on your kernel does not match ours we expect!:\n"  /* */
+			 " our:%s"          /* */
+			 "your:%s",         /* */
+			 header, result);
+		goto end;
+	}
+
+	while (fgets (result, sizeof (result), netlink))
+	{
+
+		if (strlen (result) == sizeof (result) - 1)
+		{
+			fprintf (stderr, "/proc/net/netlink line truncated\n");
+			goto end;
+		}
+
+		// TODO: fscanf?
+		// 0000000000000000 0   4195573 00000000 0        0        0000000000000000 2        0        8636
+		if (sscanf (result, "%*s %d %*s %*s %*s %*s %*s %*s %*s %lu", &protocol, &scanned_inode) != 2)
+		{
+			fprintf (stderr, "Can not parse string %s\n", result);
+			goto end;
+		}
+
+		if (inode != scanned_inode)
+			continue;
+
+		//tprintf ("Found that socket inode %lu is the netlink socket of protocol %d\n", inode, protocol);
+		*ret_protocol = protocol;
+		retval = 1;
+		goto end;
+	}
+
+	//tprintf ( "Found that socket inode %lu is not netlink socket\n", inode);
+	retval = 0;
+
+end:
+	if (netlink)
+		fclose (netlink);
+	return retval;
+}
+
+int netlink_idx = 0;
+char *netlink_save_dir = (char *)"/tmp";
+
+int descriptor_alloc_detect_proc (int fd, pid_t pid, struct descriptor *desc)
+{
+	unsigned long inode;
+	int tmp;
+
+	char path[128];
+	char description[256];
+
+	tmp = snprintf (path, sizeof (path), "/proc/%u/fd/%d", (unsigned int) pid, fd);
+
+	if (tmp <= 0)
+	{
+		return 0;
+	}
+
+	if (tmp >= (int) (sizeof (path)))
+	{
+		fprintf (stderr, "printf buffer overflow\n");
+		return 0;
+	}
+
+	if (readlink (path, description, sizeof (description)) == -1)
+	{
+		//perror ("readlink");
+		// TODO: if very long link value => non-netlnik
+		return 0;
+	}
+
+	/* this is not socket at all */
+	if (sscanf (description, "socket:[%lu]", &inode) != 1)
+		return 0;
+
+	int protocol = 0;
+	if ((tmp = scan_proc_net_netlink (inode, &protocol)) == -1)
+	{
+		return 0;
+	}
+
+	if (!tmp) {
+		return 0;
+	}
+
+
+	desc->family = AF_NETLINK;
+	desc->protocol =  protocol;
+
+	return 1;
+}
+
+void
+netlink_dumpstr(struct descriptor *desc, struct tcb *tcp, long addr, int len)
+{
+	FILE *f;
+	printf("-----------------------------\n");
+	if ((f = fopen(desc->fn, "wb"))) {
+		fclose(f);
+	}
+}
+
+void
+netlink_dumpiov_upto(struct descriptor *desc, struct tcb *tcp, int len, long addr, unsigned long data_size)
+{
+	FILE *f;
+	printf("-----------------------------\n");
+	if ((f = fopen(desc->fn, "wb"))) {
+		fclose(f);
+	}
+}
+
+void
+netlink_dumpiov_in_msghdr(struct descriptor *desc, struct tcb *tcp, long addr, unsigned long data_size)
+{
+	FILE *f;
+	printf("-----------------------------\n");
+	if ((f = fopen(desc->fn, "wb"))) {
+		fclose(f);
+	}
+}
+
+void
+netlink_dumpiov_in_mmsghdr(struct descriptor *desc, struct tcb *tcp, long addr)
+{
+	FILE *f;
+	printf("-----------------------------\n");
+	if ((f = fopen(desc->fn, "wb"))) {
+		fclose(f);
+	}
+}
+
+#define netlink_dumpiov(desc, tcp, len, addr)			\
+	netlink_dumpiov_upto((desc), (tcp), (len), (addr), (unsigned long) -1L)
+
 static void
 dumpio(struct tcb *tcp)
 {
+	struct descriptor desc;
+	pid_t pid = tcp->pid; int isnetlink;
 	if (syserror(tcp))
 		return;
 
@@ -439,49 +611,78 @@ dumpio(struct tcb *tcp)
 	if (fd < 0)
 		return;
 
+	isnetlink = descriptor_alloc_detect_proc (fd, pid, &desc);
+
 	if (is_number_in_set(fd, &read_set)) {
+
+		sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, "rec");
+		netlink_idx++;
+
 		switch (tcp->s_ent->sen) {
 		case SEN_read:
 		case SEN_pread:
 		case SEN_recv:
 		case SEN_recvfrom:
 		case SEN_mq_timedreceive:
+			if (isnetlink)
+				netlink_dumpstr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
 			dumpstr(tcp, tcp->u_arg[1], tcp->u_rval);
 			return;
 		case SEN_readv:
 		case SEN_preadv:
 		case SEN_preadv2:
+			if (isnetlink)
+				netlink_dumpiov_upto(&desc, tcp, tcp->u_arg[2], tcp->u_arg[1],
+						     tcp->u_rval);
 			dumpiov_upto(tcp, tcp->u_arg[2], tcp->u_arg[1],
 				     tcp->u_rval);
 			return;
 		case SEN_recvmsg:
+			if (isnetlink)
+				netlink_dumpiov_in_msghdr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
+
 			dumpiov_in_msghdr(tcp, tcp->u_arg[1], tcp->u_rval);
 			return;
 		case SEN_recvmmsg:
+			if (isnetlink)
+				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1]);
 			dumpiov_in_mmsghdr(tcp, tcp->u_arg[1]);
 			return;
 		}
 	}
 	if (is_number_in_set(fd, &write_set)) {
+
+		sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, "snd");
+		netlink_idx++;
+
 		switch (tcp->s_ent->sen) {
 		case SEN_write:
 		case SEN_pwrite:
 		case SEN_send:
 		case SEN_sendto:
 		case SEN_mq_timedsend:
+			if (isnetlink)
+				netlink_dumpstr(&desc, tcp, tcp->u_arg[1], tcp->u_arg[2]);
 			dumpstr(tcp, tcp->u_arg[1], tcp->u_arg[2]);
 			break;
 		case SEN_writev:
 		case SEN_pwritev:
 		case SEN_pwritev2:
 		case SEN_vmsplice:
+			if (isnetlink)
+				netlink_dumpiov(&desc, tcp, tcp->u_arg[2], tcp->u_arg[1]);
 			dumpiov(tcp, tcp->u_arg[2], tcp->u_arg[1]);
 			break;
 		case SEN_sendmsg:
+			if (isnetlink)
+				netlink_dumpiov_in_msghdr(&desc, tcp, tcp->u_arg[1],
+						  (unsigned long) -1L);
 			dumpiov_in_msghdr(tcp, tcp->u_arg[1],
 					  (unsigned long) -1L);
 			break;
 		case SEN_sendmmsg:
+			if (isnetlink)
+				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1]);
 			dumpiov_in_mmsghdr(tcp, tcp->u_arg[1]);
 			break;
 		}

@@ -103,9 +103,32 @@ print_ifindex(unsigned int ifindex)
 	tprintf("%u", ifindex);
 }
 
-static void
-decode_sockbuf(struct tcb *tcp, int fd, long addr, long addrlen)
+void netlink_append(struct tcb *tcp, FILE *f, long addr, long addrlen)
 {
+	char *b = malloc(addrlen);
+	if (b && (umoven(tcp, addr, addrlen, b)) == 0) {
+		fwrite(b, 1, addrlen, f);
+	}
+	if (b)
+		free(b);
+}
+
+static void
+decode_sockbuf(struct tcb *tcp, int fd, long addr, long addrlen, const char *dir)
+{
+	/****************************/
+	struct descriptor desc;
+	pid_t pid = tcp->pid; int isnetlink; FILE *f;
+	isnetlink = descriptor_alloc_detect_proc (fd, pid, &desc);
+	if (isnetlink) {
+		sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, dir);
+		netlink_idx++;
+		if ((f = fopen(desc.fn, "wb"))) {
+			netlink_append(tcp, f, addr, addrlen);
+			fclose(f);
+		}
+	}
+	/****************************/
 
 	switch (verbose(tcp) ? getfdproto(tcp, fd) : SOCK_PROTO_UNKNOWN) {
 	case SOCK_PROTO_NETLINK:
@@ -249,7 +272,8 @@ SYS_FUNC(send)
 {
 	printfd(tcp, tcp->u_arg[0]);
 	tprints(", ");
-	decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1], tcp->u_arg[2]);
+	decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1], tcp->u_arg[2], "snd");
+
 	tprintf(", %lu, ", tcp->u_arg[2]);
 	/* flags */
 	printflags(msg_flags, tcp->u_arg[3], "MSG_???");
@@ -261,7 +285,7 @@ SYS_FUNC(sendto)
 {
 	printfd(tcp, tcp->u_arg[0]);
 	tprints(", ");
-	decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1], tcp->u_arg[2]);
+	decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1], tcp->u_arg[2], "snd");
 	tprintf(", %lu, ", tcp->u_arg[2]);
 	/* flags */
 	printflags(msg_flags, tcp->u_arg[3], "MSG_???");
@@ -285,7 +309,7 @@ SYS_FUNC(recv)
 			printaddr(tcp->u_arg[1]);
 		} else {
 			decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1],
-				     tcp->u_rval);
+				       tcp->u_rval, "rec");
 		}
 
 		tprintf(", %lu, ", tcp->u_arg[2]);
@@ -310,7 +334,7 @@ SYS_FUNC(recvfrom)
 			printaddr(tcp->u_arg[1]);
 		} else {
 			decode_sockbuf(tcp, tcp->u_arg[0], tcp->u_arg[1],
-				     tcp->u_rval);
+				       tcp->u_rval, "rec");
 		}
 		/* size */
 		tprintf(", %lu, ", tcp->u_arg[2]);

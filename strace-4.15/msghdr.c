@@ -389,19 +389,56 @@ decode_msghdr(struct tcb *tcp, const int *const p_user_msg_namelen,
 		printaddr(addr);
 }
 
+
+static void
+netlink_decode_msghdr(struct descriptor *desc, struct tcb *tcp, const long addr, const unsigned long data_size)
+{
+	struct msghdr msg;
+	unsigned long l = data_size;
+	if (addr && fetch_struct_msghdr(tcp, addr, &msg)) {
+		FILE *f;
+		if ((f = fopen(desc->fn, "wb"))) {
+			int iovlen = (sizeof(struct iovec) * msg.msg_iovlen), i;
+			struct iovec *iov = malloc(iovlen);
+			if (iov && (umoven(tcp, (long)msg.msg_iov, iovlen, iov) == 0)) {
+				for (i = 0; i < iovlen && l > 0 ; i++) {
+					int c = iov[i].iov_len < l ? iov[i].iov_len : l;
+					netlink_append(tcp, f, (long)iov[i].iov_base, c);
+					l -= c;
+				}
+			}
+			fclose(f);
+		}
+	}
+}
+
 void
 dumpiov_in_msghdr(struct tcb *tcp, long addr, unsigned long data_size)
 {
 	struct msghdr msg;
 
-	if (fetch_struct_msghdr(tcp, addr, &msg))
+	if (fetch_struct_msghdr(tcp, addr, &msg)) {
 		dumpiov_upto(tcp, msg.msg_iovlen, (long)msg.msg_iov, data_size);
+	}
 }
 
 SYS_FUNC(sendmsg)
 {
+	struct descriptor desc;
+	pid_t pid = tcp->pid; int isnetlink;
+
 	printfd(tcp, tcp->u_arg[0]);
 	tprints(", ");
+
+	/*****************/
+	isnetlink = descriptor_alloc_detect_proc (tcp->u_arg[0], pid, &desc);
+	if (isnetlink) {
+		sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, "snd");
+		netlink_idx++;
+		netlink_decode_msghdr(&desc, tcp, tcp->u_arg[1], (unsigned long) -1L);
+	}
+	/*****************/
+
 	decode_msghdr(tcp, 0, tcp->u_arg[1], (unsigned long) -1L);
 	/* flags */
 	tprints(", ");
@@ -415,6 +452,9 @@ SYS_FUNC(recvmsg)
 	int msg_namelen;
 
 	if (entering(tcp)) {
+
+		tcp->fd_save = tcp->u_arg[0];
+
 		printfd(tcp, tcp->u_arg[0]);
 		tprints(", ");
 		if (fetch_msghdr_namelen(tcp, tcp->u_arg[1], &msg_namelen)) {
@@ -428,8 +468,21 @@ SYS_FUNC(recvmsg)
 		if (syserror(tcp))
 			tprintf("{msg_namelen=%d}", msg_namelen);
 		else
+		{
+			/*****************/
+			struct descriptor desc;
+			pid_t pid = tcp->pid; int isnetlink;
+			isnetlink = descriptor_alloc_detect_proc (tcp->fd_save, pid, &desc);
+			if (isnetlink) {
+				sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, "rec");
+				netlink_idx++;
+				netlink_decode_msghdr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
+			}
+			/*****************/
+
 			decode_msghdr(tcp, &msg_namelen, tcp->u_arg[1],
 				      tcp->u_rval);
+		}
 	}
 
 	/* flags */

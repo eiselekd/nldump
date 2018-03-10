@@ -229,6 +229,7 @@ struct tcb {
 	int qual_flg;		/* qual_flags[scno] or DEFAULT_QUAL_FLAGS + RAW */
 	unsigned long u_error;	/* Error code */
 	long scno;		/* System call number */
+	int fd_save;
 	long u_arg[MAX_ARGS];	/* System call arguments */
 #if HAVE_STRUCT_TCB_EXT_ARG
 	long long ext_arg[MAX_ARGS];
@@ -916,5 +917,18 @@ extern struct fault_opts *fault_vec[SUPPORTED_PERSONALITIES];
 #define PRI__d64 PRI__64"d"
 #define PRI__u64 PRI__64"u"
 #define PRI__x64 PRI__64"x"
+
+extern int netlink_idx;
+extern char *netlink_save_dir;
+
+struct descriptor
+{
+	int family;
+	int protocol;
+	char fn[256];
+};
+
+int descriptor_alloc_detect_proc (int fd, pid_t pid, struct descriptor *desc);
+void netlink_append(struct tcb *tcp, FILE *f, long addr, long addrlen);
 
 #endif /* !STRACE_DEFS_H */
