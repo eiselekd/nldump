@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Check decoding of kexec_file_load syscall.
+
+. "${srcdir=.}/init.sh"
+
+case $(uname -m) in
+  ppc*)
+    # kexec_file_load was wired up in 80f60e509a03ff9ff2bdbf9cd1e935c6360b8bd9
+    require_min_kernel_version_or_skip 4.11
+    ;;
+esac
+
+run_strace_match_diff -s9

@@ -1,0 +1,57 @@
+Description: Disable some failing tests on mips* and hppa
+Origin: debian
+Forwarded: no
+Author: Steve McIntyre <93sam@debian.org>
+Last-Update: 2016-12-25
+
+diff --git a/tests/fault_injection.sh b/tests/fault_injection.sh
+index 010c1c20..7d559569 100755
+--- a/tests/fault_injection.sh
++++ b/tests/fault_injection.sh
+@@ -43,4 +43,7 @@ case "$STRACE_ARCH" in
+ 		# Reloading the syscall number from %g1 register is supported
+ 		# by linux kernel starting with commit v4.5-rc7~35^2~3.
+ 		require_min_kernel_version_or_skip 4.5 ;;
++	mips*|hppa*)
++		# Fault injection just doesn't work on mips and hppa AFAICS
++		skip_ "Ignoring fault injection tests on mips and hppa" ;;
+ esac
+diff --git a/tests/newfstatat.c b/tests/newfstatat.c
+index b501d88..ba7094d 100644
+--- a/tests/newfstatat.c
++++ b/tests/newfstatat.c
+@@ -28,7 +28,7 @@
+ #include "tests.h"
+ #include <asm/unistd.h>
+ 
+-#ifdef __NR_newfstatat
++#if defined __NR_newfstatat && !defined __mips__
+ 
+ # define TEST_SYSCALL_NR __NR_newfstatat
+ # define TEST_SYSCALL_STR "newfstatat"
+diff --git a/tests/pwritev.c b/tests/pwritev.c
+index 58e5b41..c28416d 100644
+--- a/tests/pwritev.c
++++ b/tests/pwritev.c
+@@ -27,7 +27,7 @@
+ 
+ #include "tests.h"
+ 
+-#ifdef HAVE_PWRITEV
++#if defined HAVE_PWRITEV && !defined __mips__
+ 
+ # include <fcntl.h>
+ # include <stdio.h>
+diff --git a/tests/readahead.c b/tests/readahead.c
+index 2b28dda..0de38a5 100644
+--- a/tests/readahead.c
++++ b/tests/readahead.c
+@@ -41,7 +41,7 @@
+ # endif /* __GLIBC__ */
+ #endif /* HAVE_READAHEAD */
+ 
+-#ifdef HAVE_READAHEAD
++#if defined HAVE_READAHEAD && !defined __mips__
+ 
+ # include <fcntl.h>
+ # include <stdio.h>

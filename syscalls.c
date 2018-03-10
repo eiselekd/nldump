@@ -79,9 +79,19 @@ void trace_syscall (struct process *process, const struct user_regs_struct *stat
   get_args (state1, &args1);
   get_args (state2, &args2);
 
+  printf("%d\n",args1.nr);
+   return ;
+
   // http://www.skyfree.org/linux/kernel_network/socket.html
   switch (args1.nr)
   {
+  case SYS_read:
+      printf("read(%d)\n", args1.a1);
+      break;
+  case SYS_open:
+      printf("open(%s)\n", (char*)(args1.a1));
+      break;
+
 #ifdef SYS_socketcall
   case SYS_socketcall:
     print_args_t (stderr, &args1);

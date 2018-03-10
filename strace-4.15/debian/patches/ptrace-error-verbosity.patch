@@ -1,0 +1,24 @@
+Description: try to make the PTRACE scope sysctl more discoverable via a
+ verbose error message when failures happen.
+Author: Kees Cook <kees@ubuntu.com>
+
+--- a/strace.c
++++ b/strace.c
+@@ -1013,6 +1013,8 @@
+ attach_tcb(struct tcb *const tcp)
+ {
+ 	if (ptrace_attach_or_seize(tcp->pid) < 0) {
++		if (errno == EPERM)
++			perror_msg("Could not attach to process. If your uid matches the uid of the target process, check the setting of /proc/sys/kernel/yama/ptrace_scope, or try again as the root user. For more details, see /etc/sysctl.d/10-ptrace.conf");
+ 		perror_msg("attach: ptrace(%s, %d)",
+ 			   ptrace_attach_cmd, tcp->pid);
+ 		droptcb(tcp);
+@@ -1043,6 +1045,8 @@
+ 
+ 			++ntid;
+ 			if (ptrace_attach_or_seize(tid) < 0) {
++				if (errno == EPERM)
++					perror_msg("Could not attach to process. If your uid matches the uid of the target process, check the setting of /proc/sys/kernel/yama/ptrace_scope, or try again as the root user. For more details, see /etc/sysctl.d/10-ptrace.conf");
+ 				++nerr;
+ 				if (debug_flag)
+ 					perror_msg("attach: ptrace(%s, %d)",

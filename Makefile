@@ -39,3 +39,7 @@ indent:
 
 clean:
 	rm -f *.[oais] *~ $(TARGETS)
+
+
+strace:
+	cd strace-4.15; dpkg-buildpackage -us -uc -nc

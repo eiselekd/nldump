@@ -26,7 +26,7 @@ static int wait_for_stopped (pid_t pid, bool sysgood, int *retstatus)
 
   for (;;)
   {
-
+      printf(".");
     if (waitpid (pid, &status, 0) == -1)
     {
       perror ("waitpid failed");
@@ -58,14 +58,21 @@ static int wait_for_break (pid_t pid, struct user_regs_struct *state, int *statu
 {
   int ret;
 
-  if (ptrace (PTRACE_SYSCALL, pid, 0, 0) == -1)
-    return -1;                  // FAIL
+  printf("-");
+  if (ptrace (PTRACE_SYSCALL, pid, 0, 0) == -1) {
+      printf("ptrace-PTRACE_SYSCALL fail\n");
+      return -1;                  // FAIL
+  }
 
-  if ((ret = wait_for_stopped (pid, true, status)))
+  if ((ret = wait_for_stopped (pid, true, status))) {
+      printf("wait_for_stopped fail\n");
     return ret;
+  }
 
-  if (ptrace (PTRACE_GETREGS, pid, 0, state) == -1)
-    return -1;
+  if (ptrace (PTRACE_GETREGS, pid, 0, state) == -1) {
+      printf("Err");
+      return -1;
+  }
 
   return 0;
 }

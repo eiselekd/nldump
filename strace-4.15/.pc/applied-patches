@@ -1,0 +1,4 @@
+disable-failing-tests.patch
+ptrace-error-verbosity.patch
+no-arm-unaligned-access
+kexec_file_load.patch
