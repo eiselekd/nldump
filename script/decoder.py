@@ -9,7 +9,7 @@ Sample::
 
 '''
 import sys, argparse, re, struct, os
-from pprint import pprint
+import pprint
 from importlib import import_module
 from pyroute2.common import load_dump
 from pyroute2.common import hexdump
@@ -24,10 +24,18 @@ from pyroute2.netlink.rtnl.fibmsg import fibmsg
 from pyroute2.netlink.rtnl.ifinfmsg import ifinfmsg
 from pyroute2.netlink.rtnl.ifaddrmsg import ifaddrmsg
 from pyroute2.netlink.nl80211 import *
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-v", "--verbose", action="count", default=0)
+parser.add_argument("-C", "--nocolor", action="count", help="prevent coloring", default=0)
+parser.add_argument("-D", "--nodecode", action="count", help="stringify constants/flags", default=0)
+parser.add_argument('files', nargs='*', default=[])
+opts = parser.parse_args()
+
 try:
     from sty import fg, bg, ef, rs
     def setcolor(a):
-        if not (os.isatty(1)):
+        if opts.nocolor: # && not (os.isatty(1))
             return a
         return bg.blue+a+bg.rs
 except:
@@ -206,12 +214,6 @@ NL80211_map = {
     NL80211_CMD_WIPHY_REG_CHANGE : 'NL80211_CMD_WIPHY_REG_CHANGE'
 }
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-v", "--verbose", action="count", default=0)
-parser.add_argument("-D", "--nodecode", action="count", help="stringify constants/flags", default=0)
-parser.add_argument('files', nargs='*', default=[])
-
-opts = parser.parse_args()
 
 for fn in opts.files:
     
@@ -274,5 +276,18 @@ for fn in opts.files:
                 fa.append("0x%x" %(f))
             msg['header']['flags'] = "|".join(fa)
 
-        pprint(msg)
+        o = pprint.pformat(msg)
+        o2 = ""
+        if (direction == 'snd'):
+            while len(o):
+                m = re.match(r"(.*?)('[a-zA-Z0-9]+_CMD_[a-zA-Z_0-9]+')", o, re.MULTILINE | re.DOTALL);
+                if (m):
+                    o2+=(m.group(1))
+                    o2+=(setcolor(m.group(2)));
+                    o = o[len(m.group(0)):]
+                else:
+                    break;
+        
+        o2+=(o)
+        print(o2)
         offset += msg['header']['length']

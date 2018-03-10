@@ -1,6 +1,6 @@
 -------- nl_000000_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -36,7 +36,7 @@
  'version': 0}
 -------- nl_000003_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -72,7 +72,7 @@
  'version': 0}
 -------- nl_000006_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -108,7 +108,7 @@
  'version': 0}
 -------- nl_000009_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -144,7 +144,7 @@
  'version': 0}
 -------- nl_000012_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -180,7 +180,7 @@
  'version': 0}
 -------- nl_000015_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -216,7 +216,7 @@
  'version': 0}
 -------- nl_000018_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -252,7 +252,7 @@
  'version': 0}
 -------- nl_000021_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -288,7 +288,7 @@
  'version': 0}
 -------- nl_000024_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -324,7 +324,7 @@
  'version': 0}
 -------- nl_000027_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_GET_INTERFACE',
+ 'cmd': [44m'NL80211_CMD_GET_INTERFACE'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 1228941691,
@@ -361,7 +361,7 @@
  'version': 0}
 -------- nl_000030_00000016_snd
 {'attrs': [],
- 'cmd': 'NL80211_CMD_GET_PROTOCOL_FEATURES',
+ 'cmd': [44m'NL80211_CMD_GET_PROTOCOL_FEATURES'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 20,
             'pid': 1228941691,
@@ -391,7 +391,7 @@
  'version': 0}
 -------- nl_000033_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_SPLIT_WIPHY_DUMP', '')],
- 'cmd': 'NL80211_CMD_GET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_GET_WIPHY'[49m,
  'header': {'flags': '0x305|NLM_F_REQUEST|NLM_F_ACK|NLM_F_DUMP',
             'length': 32,
             'pid': 1228941691,
@@ -787,7 +787,7 @@
  'version': 0}
 -------- nl_000036_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_GET_INTERFACE',
+ 'cmd': [44m'NL80211_CMD_GET_INTERFACE'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 1228941691,
@@ -824,7 +824,7 @@
  'version': 0}
 -------- nl_000039_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_IFTYPE', 3)],
- 'cmd': 'NL80211_CMD_SET_INTERFACE',
+ 'cmd': [44m'NL80211_CMD_SET_INTERFACE'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -998,7 +998,7 @@
  'version': 0}
 -------- nl_000055_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_UNEXPECTED_FRAME',
+ 'cmd': [44m'NL80211_CMD_UNEXPECTED_FRAME'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 2529175931,
@@ -1018,7 +1018,7 @@
  'version': 0}
 -------- nl_000057_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_GET_INTERFACE',
+ 'cmd': [44m'NL80211_CMD_GET_INTERFACE'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 1228941691,
@@ -1055,7 +1055,7 @@
  'version': 0}
 -------- nl_000060_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY', 1)],
- 'cmd': 'NL80211_CMD_REGISTER_BEACONS',
+ 'cmd': [44m'NL80211_CMD_REGISTER_BEACONS'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 3112184187,
@@ -1075,7 +1075,7 @@
  'version': 0}
 -------- nl_000062_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_GET_INTERFACE',
+ 'cmd': [44m'NL80211_CMD_GET_INTERFACE'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 1228941691,
@@ -1112,7 +1112,7 @@
  'version': 0}
 -------- nl_000065_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1148,7 +1148,7 @@
  'version': 0}
 -------- nl_000068_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1184,7 +1184,7 @@
  'version': 0}
 -------- nl_000071_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1220,7 +1220,7 @@
  'version': 0}
 -------- nl_000074_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1256,7 +1256,7 @@
  'version': 0}
 -------- nl_000077_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1292,7 +1292,7 @@
  'version': 0}
 -------- nl_000080_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1328,7 +1328,7 @@
  'version': 0}
 -------- nl_000083_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nlctrl')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1364,7 +1364,7 @@
  'version': 0}
 -------- nl_000086_00000016_snd
 {'attrs': [('NL80211_ATTR_WIPHY_NAME', 'nl80211')],
- 'cmd': 'NL80211_CMD_NEW_WIPHY',
+ 'cmd': [44m'NL80211_CMD_NEW_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 32,
             'pid': 1228941691,
@@ -1400,7 +1400,7 @@
  'version': 0}
 -------- nl_000089_00000016_snd
 {'attrs': [],
- 'cmd': 'NL80211_CMD_GET_PROTOCOL_FEATURES',
+ 'cmd': [44m'NL80211_CMD_GET_PROTOCOL_FEATURES'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 20,
             'pid': 1228941691,
@@ -1430,7 +1430,7 @@
  'version': 0}
 -------- nl_000092_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_SPLIT_WIPHY_DUMP', '')],
- 'cmd': 'NL80211_CMD_GET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_GET_WIPHY'[49m,
  'header': {'flags': '0x305|NLM_F_REQUEST|NLM_F_ACK|NLM_F_DUMP',
             'length': 32,
             'pid': 1228941691,
@@ -1452,9 +1452,9 @@
            ('NL80211_ATTR_MAX_SCAN_IE_LEN', 2257),
            ('NL80211_ATTR_MAX_SCHED_SCAN_IE_LEN', 0),
            ('NL80211_ATTR_MAX_MATCH_SETS', 0),
-           ('UNKNOWN', {'header': {'type': 222, 'length': 8}}),
-           ('UNKNOWN', {'header': {'type': 223, 'length': 8}}),
-           ('UNKNOWN', {'header': {'type': 224, 'length': 8}}),
+           ('UNKNOWN', {'header': {'length': 8, 'type': 222}}),
+           ('UNKNOWN', {'header': {'length': 8, 'type': 223}}),
+           ('UNKNOWN', {'header': {'length': 8, 'type': 224}}),
            ('NL80211_ATTR_SUPPORT_IBSS_RSN', ''),
            ('NL80211_ATTR_SUPPORT_MESH_AUTH', ''),
            ('NL80211_ATTR_TDLS_SUPPORT', ''),
@@ -1826,7 +1826,7 @@
  'version': 0}
 -------- nl_000095_00000016_snd
 {'attrs': [],
- 'cmd': 'NL80211_CMD_GET_REG',
+ 'cmd': [44m'NL80211_CMD_GET_REG'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 20,
             'pid': 1228941691,
@@ -1858,7 +1858,7 @@
  'version': 0}
 -------- nl_000098_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_WIPHY_FREQ', 2437)],
- 'cmd': 'NL80211_CMD_SET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_SET_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -1878,7 +1878,7 @@
  'version': 0}
 -------- nl_000100_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7)],
- 'cmd': 'NL80211_CMD_DEL_STATION',
+ 'cmd': [44m'NL80211_CMD_DEL_STATION'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 28,
             'pid': 1228941691,
@@ -1920,7 +1920,7 @@
  'version': 255}
 -------- nl_000104_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_KEY_IDX', '00')],
- 'cmd': 'NL80211_CMD_DEL_KEY',
+ 'cmd': [44m'NL80211_CMD_DEL_KEY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -1940,7 +1940,7 @@
  'version': 255}
 -------- nl_000106_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_KEY_IDX', '01')],
- 'cmd': 'NL80211_CMD_DEL_KEY',
+ 'cmd': [44m'NL80211_CMD_DEL_KEY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -1960,7 +1960,7 @@
  'version': 255}
 -------- nl_000108_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_KEY_IDX', '02')],
- 'cmd': 'NL80211_CMD_DEL_KEY',
+ 'cmd': [44m'NL80211_CMD_DEL_KEY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -1980,7 +1980,7 @@
  'version': 255}
 -------- nl_000110_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7), ('NL80211_ATTR_KEY_IDX', '03')],
- 'cmd': 'NL80211_CMD_DEL_KEY',
+ 'cmd': [44m'NL80211_CMD_DEL_KEY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 36,
             'pid': 1228941691,
@@ -2035,7 +2035,7 @@
            ('NL80211_ATTR_BSS_SHORT_SLOT_TIME', '01'),
            ('NL80211_ATTR_AP_ISOLATE', '00'),
            ('NL80211_ATTR_BSS_BASIC_RATES', '02:04:0b:16')],
- 'cmd': 'NL80211_CMD_SET_BSS',
+ 'cmd': [44m'NL80211_CMD_SET_BSS'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 68,
             'pid': 1228941691,
@@ -2065,7 +2065,7 @@
 -------- nl_000117_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7),
            ('NL80211_ATTR_WIPHY_TXQ_PARAMS', '2c:00:01:00:05:00:01:00:00:00:00:00:06:00:02:00:2f:00:00:00:06:00:03:00:03:00:00:00:06:00:04:00:07:00:00:00:05:00:05:00:01:00:00:00')],
- 'cmd': 'NL80211_CMD_SET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_SET_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 76,
             'pid': 1228941691,
@@ -2086,7 +2086,7 @@
 -------- nl_000119_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7),
            ('NL80211_ATTR_WIPHY_TXQ_PARAMS', '2c:00:01:00:05:00:01:00:01:00:00:00:06:00:02:00:5e:00:00:00:06:00:03:00:07:00:00:00:06:00:04:00:0f:00:00:00:05:00:05:00:01:00:00:00')],
- 'cmd': 'NL80211_CMD_SET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_SET_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 76,
             'pid': 1228941691,
@@ -2107,7 +2107,7 @@
 -------- nl_000121_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7),
            ('NL80211_ATTR_WIPHY_TXQ_PARAMS', '2c:00:01:00:05:00:01:00:02:00:00:00:06:00:02:00:00:00:00:00:06:00:03:00:0f:00:00:00:06:00:04:00:3f:00:00:00:05:00:05:00:03:00:00:00')],
- 'cmd': 'NL80211_CMD_SET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_SET_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 76,
             'pid': 1228941691,
@@ -2128,7 +2128,7 @@
 -------- nl_000123_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7),
            ('NL80211_ATTR_WIPHY_TXQ_PARAMS', '2c:00:01:00:05:00:01:00:03:00:00:00:06:00:02:00:00:00:00:00:06:00:03:00:0f:00:00:00:06:00:04:00:ff:03:00:00:05:00:05:00:07:00:00:00')],
- 'cmd': 'NL80211_CMD_SET_WIPHY',
+ 'cmd': [44m'NL80211_CMD_SET_WIPHY'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 76,
             'pid': 1228941691,
@@ -2764,7 +2764,7 @@
 -------- nl_000174_00000016_snd
 {'attrs': [('NL80211_ATTR_IFINDEX', 7),
            ('NL80211_ATTR_MAC', 'dc:a9:04:ad:58:7e')],
- 'cmd': 'NL80211_CMD_DEL_STATION',
+ 'cmd': [44m'NL80211_CMD_DEL_STATION'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 40,
             'pid': 1228941691,
@@ -2790,7 +2790,7 @@
            ('NL80211_ATTR_STA_AID', '01:00'),
            ('NL80211_ATTR_STA_LISTEN_INTERVAL', '14:00'),
            ('NL80211_ATTR_STA_FLAGS2', '06:00:00:00:06:00:00:00')],
- 'cmd': 'NL80211_CMD_NEW_STATION',
+ 'cmd': [44m'NL80211_CMD_NEW_STATION'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 92,
             'pid': 1228941691,
@@ -2813,7 +2813,7 @@
            ('NL80211_ATTR_MAC', 'dc:a9:04:ad:58:7e'),
            ('NL80211_ATTR_STA_FLAGS', '04:00:01:00:04:00:02:00'),
            ('NL80211_ATTR_STA_FLAGS2', '1e:00:00:00:06:00:00:00')],
- 'cmd': 'NL80211_CMD_SET_STATION',
+ 'cmd': [44m'NL80211_CMD_SET_STATION'[49m,
  'header': {'flags': '0x5|NLM_F_REQUEST|NLM_F_ACK',
             'length': 64,
             'pid': 1228941691,
