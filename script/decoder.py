@@ -23,6 +23,7 @@ from pyroute2.netlink.rtnl.ndtmsg import ndtmsg
 from pyroute2.netlink.rtnl.fibmsg import fibmsg
 from pyroute2.netlink.rtnl.ifinfmsg import ifinfmsg
 from pyroute2.netlink.rtnl.ifaddrmsg import ifaddrmsg
+from pyroute2.netlink.rtnl import RTM_VALUES
 from pyroute2.netlink.nl80211 import *
 
 parser = argparse.ArgumentParser()
@@ -100,13 +101,13 @@ NL80211_map = {
     NL80211_CMD_GET_INTERFACE : 'NL80211_CMD_GET_INTERFACE',
     NL80211_CMD_SET_INTERFACE : 'NL80211_CMD_SET_INTERFACE',
     NL80211_CMD_NEW_INTERFACE : 'NL80211_CMD_NEW_INTERFACE',
-    NL80211_CMD_DEL_INTERFACE : 'NL80211_CMD_DEL_INTERFACE',                                                     
-    NL80211_CMD_GET_KEY : 'NL80211_CMD_GET_KEY',                                                           
-    NL80211_CMD_SET_KEY : 'NL80211_CMD_SET_KEY',                                                          
-    NL80211_CMD_NEW_KEY : 'NL80211_CMD_NEW_KEY',                                                          
-    NL80211_CMD_DEL_KEY : 'NL80211_CMD_DEL_KEY',                                                          
-    NL80211_CMD_GET_BEACON : 'NL80211_CMD_GET_BEACON',                                                       
-    NL80211_CMD_SET_BEACON : 'NL80211_CMD_SET_BEACON',                                                       
+    NL80211_CMD_DEL_INTERFACE : 'NL80211_CMD_DEL_INTERFACE',
+    NL80211_CMD_GET_KEY : 'NL80211_CMD_GET_KEY',
+    NL80211_CMD_SET_KEY : 'NL80211_CMD_SET_KEY',
+    NL80211_CMD_NEW_KEY : 'NL80211_CMD_NEW_KEY',
+    NL80211_CMD_DEL_KEY : 'NL80211_CMD_DEL_KEY',
+    NL80211_CMD_GET_BEACON : 'NL80211_CMD_GET_BEACON',
+    NL80211_CMD_SET_BEACON : 'NL80211_CMD_SET_BEACON',
     NL80211_CMD_START_AP : 'NL80211_CMD_START_AP|NL80211_CMD_NEW_BEACON',
     NL80211_CMD_STOP_AP : 'NL80211_CMD_STOP_AP|NL80211_CMD_DEL_BEACON',
     NL80211_CMD_GET_STATION : 'NL80211_CMD_GET_STATION',
@@ -124,7 +125,7 @@ NL80211_map = {
     NL80211_CMD_SET_MESH_CONFIG : 'NL80211_CMD_SET_MESH_CONFIG',
     NL80211_CMD_SET_MGMT_EXTRA_IE : 'NL80211_CMD_SET_MGMT_EXTRA_IE',
     NL80211_CMD_GET_REG : 'NL80211_CMD_GET_REG',
-     
+
     NL80211_CMD_GET_SCAN : 'NL80211_CMD_GET_SCAN',
     NL80211_CMD_TRIGGER_SCAN : 'NL80211_CMD_TRIGGER_SCAN',
     NL80211_CMD_NEW_SCAN_RESULTS : 'NL80211_CMD_NEW_SCAN_RESULTS',
@@ -146,7 +147,7 @@ NL80211_map = {
     NL80211_CMD_GET_SURVEY : 'NL80211_CMD_GET_SURVEY',
     NL80211_CMD_NEW_SURVEY_RESULTS : 'NL80211_CMD_NEW_SURVEY_RESULTS',
     NL80211_CMD_SET_PMKSA : 'NL80211_CMD_SET_PMKSA',
-    
+
     NL80211_CMD_DEL_PMKSA : 'NL80211_CMD_DEL_PMKSA',
     NL80211_CMD_FLUSH_PMKSA : 'NL80211_CMD_FLUSH_PMKSA',
     NL80211_CMD_REMAIN_ON_CHANNEL : 'NL80211_CMD_REMAIN_ON_CHANNEL',
@@ -154,9 +155,9 @@ NL80211_map = {
     NL80211_CMD_SET_TX_BITRATE_MASK : 'NL80211_CMD_SET_TX_BITRATE_MASK',
     NL80211_CMD_REGISTER_FRAME : 'NL80211_CMD_REGISTER_FRAME|NL80211_CMD_REGISTER_ACTION',
     NL80211_CMD_FRAME : 'NL80211_CMD_FRAME|NL80211_CMD_ACTION',
-                     
+
     NL80211_CMD_FRAME_TX_STATUS : 'NL80211_CMD_FRAME_TX_STATUS|NL80211_CMD_ACTION_TX_STATUS',
-    
+
     NL80211_CMD_SET_POWER_SAVE : 'NL80211_CMD_SET_POWER_SAVE',
     NL80211_CMD_GET_POWER_SAVE : 'NL80211_CMD_GET_POWER_SAVE',
     NL80211_CMD_SET_CQM : 'NL80211_CMD_SET_CQM',
@@ -207,7 +208,7 @@ NL80211_map = {
     NL80211_CMD_GET_MPP : 'NL80211_CMD_GET_MPP',
     NL80211_CMD_JOIN_OCB : 'NL80211_CMD_JOIN_OCB',
     NL80211_CMD_LEAVE_OCB : 'NL80211_CMD_LEAVE_OCB',
-    
+
     NL80211_CMD_CH_SWITCH_STARTED_NOTIFY : 'NL80211_CMD_CH_SWITCH_STARTED_NOTIFY',
     NL80211_CMD_TDLS_CHANNEL_SWITCH : 'NL80211_CMD_TDLS_CHANNEL_SWITCH',
     NL80211_CMD_TDLS_CANCEL_CHANNEL_SWITCH : 'NL80211_CMD_TDLS_CANCEL_CHANNEL_SWITCH',
@@ -216,10 +217,10 @@ NL80211_map = {
 
 
 for fn in opts.files:
-    
+
     with open(fn, mode='rb') as file:
         data = file.read()
-        
+
     proto = 0
     direction = "rec"
 
@@ -230,11 +231,11 @@ for fn in opts.files:
 
     offset = 0
     inbox = []
-    
+
     while offset < len(data):
         if (proto == 0):
-            typ = struct.unpack_from("h",data,offset+4)
-            flg = struct.unpack_from("h",data,offset+6)
+            typ, = struct.unpack_from("h",data,offset+4)
+            flg, = struct.unpack_from("h",data,offset+6)
             msg = genlmsg(data[offset:]);
 
             if typ in msg_map:
@@ -246,7 +247,7 @@ for fn in opts.files:
             met = nl80211cmd
         else:
             met = genlmsg
-            
+
         msg = met(data[offset:])
         msg.decode()
 
@@ -254,6 +255,9 @@ for fn in opts.files:
             if (proto == 16):
                 if 'cmd' in msg and msg['cmd'] in NL80211_map:
                     msg['cmd'] = NL80211_map[msg['cmd']]
+            elif (proto == 0):
+                if msg['header']['type'] in RTM_VALUES:
+                    msg['cmd'] = RTM_VALUES[msg['header']['type']]
 
             fa = [ ("0x%x"%(msg['header']['flags']))]
             f = msg['header']['flags']
@@ -266,10 +270,10 @@ for fn in opts.files:
                 return f
 
             f = fsub(nlm_f, f)
-            if (isinstance(msg['cmd'], str)):
-                if (msg['cmd'].find("GET_") != -1):
+            if ('cmd' in msg and isinstance(msg['cmd'], str)):
+                if (msg['cmd'].find("_GET") != -1):
                     f = fsub(nlm_f_get, f)
-                elif (msg['cmd'].find("NEW_") != -1):
+                elif (msg['cmd'].find("_NEW") != -1):
                     f = fsub(nlm_f_new, f)
                 msg['cmd'] = msg['cmd']
             if (f != 0):
@@ -287,7 +291,7 @@ for fn in opts.files:
                     o = o[len(m.group(0)):]
                 else:
                     break;
-        
+
         o2+=(o)
         print(o2)
         offset += msg['header']['length']

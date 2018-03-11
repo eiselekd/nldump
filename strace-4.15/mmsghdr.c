@@ -165,6 +165,17 @@ dumpiov_in_mmsghdr(struct tcb *tcp, long addr)
 	}
 }
 
+void
+netlink_decode_mmsghdr(struct descriptor *desc, struct tcb *tcp, const long addr, int cnt)
+{
+	FILE *f;
+	if ((f = fopen(desc->fn, "wb"))) {
+		netlink_append_mmsghdr(f, tcp, addr, cnt);
+		fclose(f);
+		netlink_decoder_try(tcp, desc->fn);
+	}
+}
+
 SYS_FUNC(sendmmsg)
 {
 	if (entering(tcp)) {
@@ -199,6 +210,9 @@ SYS_FUNC(sendmmsg)
 SYS_FUNC(recvmmsg)
 {
 	if (entering(tcp)) {
+
+		tcp->fd_save = tcp->u_arg[0];
+
 		printfd(tcp, tcp->u_arg[0]);
 		tprints(", ");
 		if (verbose(tcp)) {
@@ -216,6 +230,18 @@ SYS_FUNC(recvmmsg)
 		}
 		return 0;
 	} else {
+
+		/*****************/
+		struct descriptor desc;
+		pid_t pid = tcp->pid; int isnetlink;
+		isnetlink = descriptor_alloc_detect_proc (tcp->fd_save, pid, &desc);
+		if (isnetlink) {
+			sprintf(desc.fn, "%s/nl_%06d_%08d_%s", netlink_save_dir, netlink_idx, desc.protocol, "rec");
+			netlink_idx++;
+			netlink_decode_mmsghdr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
+		}
+		/*****************/
+
 		if (verbose(tcp)) {
 			/* msgvec */
 			decode_mmsgvec(tcp, tcp->u_arg[1], tcp->u_rval,

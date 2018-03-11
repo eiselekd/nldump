@@ -930,5 +930,12 @@ struct descriptor
 
 int descriptor_alloc_detect_proc (int fd, pid_t pid, struct descriptor *desc);
 void netlink_append(struct tcb *tcp, FILE *f, long addr, long addrlen);
+void netlink_append_iov(FILE *f, struct tcb *tcp, const long addr, int len, const unsigned long data_size);
+void netlink_decode_msghdr(struct descriptor *desc, struct tcb *tcp, const long addr, const unsigned long data_size);
+void netlink_append_mmsghdr(FILE *f, struct tcb *tcp, long addr, const int cnt);
+void netlink_decode_mmsghdr(struct descriptor *desc, struct tcb *tcp, const long addr, int cnt);
+int netlink_decoder_try(struct tcb *tcp, char *n);
+
+extern char *netlink_decoder;
 
 #endif /* !STRACE_DEFS_H */

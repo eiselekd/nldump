@@ -91,6 +91,7 @@ unsigned int qflag = 0;
 static unsigned int tflag = 0;
 static bool rflag = 0;
 static bool print_pid_pfx = 0;
+char *netlink_decoder = 0;
 
 /* -I n */
 enum {
@@ -1556,6 +1557,27 @@ get_os_release(void)
 	return rel;
 }
 
+int netlink_decoder_try(struct tcb *tcp, char *n) {
+    char b[256];
+    if (!netlink_decoder)
+	return -1;
+    sprintf(b, "%s %s 1>&2", netlink_decoder, n);
+    if (outfname)
+	sprintf(b, "%s %s > /tmp/strace_tmp.txt", netlink_decoder, n);
+    int r = system(b);
+    if (outfname) {
+	FILE *f = fopen("/tmp/strace_tmp.txt", "r");
+	if (f && tcp->outf) {
+	    int c;
+	    while ((c = fgetc(f)) != EOF)
+		fputc(c, tcp->outf);
+	    fclose (f);
+	}
+    }
+
+    return r;
+}
+
 /*
  * Initialization part of main() was eating much stack (~0.5k),
  * which was unused after init.
@@ -1595,7 +1617,7 @@ init(int argc, char *argv[])
 #endif
 	qualify("signal=all");
 	while ((c = getopt(argc, argv,
-		"+b:cCdfFhiqrtTvVwxyz"
+		"+b:cCdfFhiqrtTvVwxyzn:"
 #ifdef USE_LIBUNWIND
 		"k"
 #endif
@@ -1637,6 +1659,9 @@ init(int argc, char *argv[])
 			break;
 		case 'i':
 			iflag = 1;
+			break;
+		case 'n':
+			netlink_decoder = optarg;
 			break;
 		case 'q':
 			qflag++;

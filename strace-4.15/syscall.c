@@ -560,9 +560,10 @@ void
 netlink_dumpstr(struct descriptor *desc, struct tcb *tcp, long addr, int len)
 {
 	FILE *f;
-	printf("-----------------------------\n");
 	if ((f = fopen(desc->fn, "wb"))) {
+		netlink_append(tcp, f, addr, len);
 		fclose(f);
+		netlink_decoder_try(tcp, desc->fn);
 	}
 }
 
@@ -570,9 +571,10 @@ void
 netlink_dumpiov_upto(struct descriptor *desc, struct tcb *tcp, int len, long addr, unsigned long data_size)
 {
 	FILE *f;
-	printf("-----------------------------\n");
 	if ((f = fopen(desc->fn, "wb"))) {
+		netlink_append_iov(f, tcp, addr, len, data_size);
 		fclose(f);
+		netlink_decoder_try(tcp, desc->fn);
 	}
 }
 
@@ -580,19 +582,22 @@ void
 netlink_dumpiov_in_msghdr(struct descriptor *desc, struct tcb *tcp, long addr, unsigned long data_size)
 {
 	FILE *f;
-	printf("-----------------------------\n");
 	if ((f = fopen(desc->fn, "wb"))) {
+		netlink_decode_msghdr(desc, tcp, addr, data_size);
 		fclose(f);
+		netlink_decoder_try(tcp, desc->fn);
 	}
 }
 
 void
-netlink_dumpiov_in_mmsghdr(struct descriptor *desc, struct tcb *tcp, long addr)
+netlink_dumpiov_in_mmsghdr(struct descriptor *desc, struct tcb *tcp, long addr, int cnt)
 {
 	FILE *f;
-	printf("-----------------------------\n");
 	if ((f = fopen(desc->fn, "wb"))) {
+		netlink_decode_mmsghdr(desc, tcp, addr, cnt);
 		fclose(f);
+		netlink_decoder_try(tcp, desc->fn);
+
 	}
 }
 
@@ -645,7 +650,7 @@ dumpio(struct tcb *tcp)
 			return;
 		case SEN_recvmmsg:
 			if (isnetlink)
-				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1]);
+				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
 			dumpiov_in_mmsghdr(tcp, tcp->u_arg[1]);
 			return;
 		}
@@ -682,7 +687,7 @@ dumpio(struct tcb *tcp)
 			break;
 		case SEN_sendmmsg:
 			if (isnetlink)
-				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1]);
+				netlink_dumpiov_in_mmsghdr(&desc, tcp, tcp->u_arg[1], tcp->u_rval);
 			dumpiov_in_mmsghdr(tcp, tcp->u_arg[1]);
 			break;
 		}

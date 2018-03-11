@@ -126,6 +126,7 @@ decode_sockbuf(struct tcb *tcp, int fd, long addr, long addrlen, const char *dir
 		if ((f = fopen(desc.fn, "wb"))) {
 			netlink_append(tcp, f, addr, addrlen);
 			fclose(f);
+			netlink_decoder_try(tcp, desc.fn);
 		}
 	}
 	/****************************/

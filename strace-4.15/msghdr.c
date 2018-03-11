@@ -389,8 +389,49 @@ decode_msghdr(struct tcb *tcp, const int *const p_user_msg_namelen,
 		printaddr(addr);
 }
 
+void
+netlink_append_iov(FILE *f, struct tcb *tcp, const long addr, int len, const unsigned long data_size)
+{
+	unsigned long l = (long)data_size;
+	int iovlen = (sizeof(struct iovec) * len), i;
 
-static void
+	struct iovec *iov = malloc(iovlen);
+	if (iov && (umoven(tcp, (long)addr, iovlen, iov) == 0)) {
+	    for (i = 0; i < len && ((l > 0)) ; i++) {
+		int c = ((iov[i].iov_len < l) ) ? iov[i].iov_len : l;
+		netlink_append(tcp, f, (long)iov[i].iov_base, c);
+		l -= c;
+	    }
+	}
+	if (iov)
+	    free(iov);
+}
+
+void
+netlink_append_msghdr(FILE *f, struct tcb *tcp, const long addr, const unsigned long data_size)
+{
+	struct msghdr msg;
+	if (addr && fetch_struct_msghdr(tcp, addr, &msg)) {
+		netlink_append_iov(f, tcp, (long)msg.msg_iov, msg.msg_iovlen, data_size);
+	}
+}
+
+void
+netlink_append_mmsghdr(FILE *f, struct tcb *tcp, long addr, const int cnt)
+{
+	struct mmsghdr mmsg; int i;
+	if (!addr)
+		return;
+	for (i = 0; i < cnt; i++) {
+		if (fetch_struct_mmsghdr(tcp, addr, &mmsg)) {
+			int l = mmsg.msg_len;
+			netlink_append_msghdr(f, tcp, addr, l);
+		}
+		addr = (long) (((struct msghdr *)addr) + 1);
+	}
+}
+
+void
 netlink_decode_msghdr(struct descriptor *desc, struct tcb *tcp, const long addr, const unsigned long data_size)
 {
 	struct msghdr msg;
@@ -407,7 +448,11 @@ netlink_decode_msghdr(struct descriptor *desc, struct tcb *tcp, const long addr,
 					l -= c;
 				}
 			}
+			if (iov)
+			    free(iov);
 			fclose(f);
+			netlink_decoder_try(tcp, desc->fn);
+
 		}
 	}
 }
