@@ -13,7 +13,7 @@ ifaces = {}; desc = []
 
 def start_ap():
     ap = AP()
-    #ap.startap();
+    ap.startap();
 
 def main():
     parser = argparse.ArgumentParser()
@@ -56,7 +56,6 @@ def main():
             #    print("Unknown iface " + cmds[1])
             #iface = ifaces[cmds[1]]
         start_ap();
-            
     else:
         print("Usage: [list|ap]"); exit(1);
 

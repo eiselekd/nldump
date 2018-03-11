@@ -37,13 +37,13 @@ class AP(NL80211):
         # FIXME: unfortunately we can not omit it here
         self.bind(groups, async)
 
-
     def startap(self):
 
+        print("startap")
         msg = nl80211cmd()
-        msg['cmd'] = NL80211_CMD_NEW_WIPHY;
-        msg['attrs'] = [['NL80211_ATTR_WIPHY_NAME', 'nlctrl']];
-        r = self.nlm_request(msg, msg_type=16, msg_flags=NLM_F_REQUEST | NLM_F_ACK);
+        msg['cmd'] = NL80211_CMD_GET_INTERFACE;
+        msg['attrs'] = [['NL80211_ATTR_IFINDEX', 5]];
+        r = self.nlm_request(msg, msg_type=28, msg_flags=NLM_F_REQUEST | NLM_F_ACK);
         pprint(r);
 
         return

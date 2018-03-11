@@ -288,7 +288,6 @@ for fn in opts.files:
                 print("--------- Generic protocol type %d unimpl --------" %(typ))
         else:
             print("--------- unimpl protocol cmd %d --------" %(proto))
-                
 
         if (met == None):
             met = genlmsg
