@@ -6,27 +6,16 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "."))
 from pyroute2.netlink import *
 from pyroute2.iwutil import IW
 from pyroute2.netlink.nl80211 import *
+from pprint import pprint;
 
 from ap import AP;
 
 ifaces = {}; desc = []
 
-def start_ap():
-    ap = AP()
-    ap.startap();
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="count", default=0)
-    parser.add_argument("-l", "--list", action="count", help="list interfaces", default=0)
-    parser.add_argument('cmds', nargs='*', default=[])
-    opts = parser.parse_args()
+    global opts
     
-    cmds = opts.cmds;
-    if len(cmds) < 1:
-        exit(0);
-
-
     def getifaces():
         global ifaces, desc
         iw = IW()
@@ -45,19 +34,40 @@ def main():
             ifaces[mac] = i;
             iw.close()
 
-    if cmds[0] == 'list':
+    def do_list(opts):
         getifaces();
         print("\n".join(desc))
         exit(0)
-    elif cmds[0] == 'ap':
-        if len(cmds) < 2:
-            exit(0);
-            #if not (cmds[1] in ifaces):
-            #    print("Unknown iface " + cmds[1])
-            #iface = ifaces[cmds[1]]
-        start_ap();
-    else:
-        print("Usage: [list|ap]"); exit(1);
+
+    def do_ap(opts):
+        ap = AP(opts)
+        ap.startap();
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="count", default=0)
+    parser.add_argument("-l", "--list", action="count", help="list interfaces", default=0)
+
+    subparsers = parser.add_subparsers(help='sub-commands help')
+    
+    # create the parser for the "list" command
+    parser_list = subparsers.add_parser('list', help='list interface indexes')
+    parser_list.set_defaults(func=do_list)
+    
+    # create the parser for the "ap" command
+    parser_ap = subparsers.add_parser('ap', help='accesspoint help')
+    parser_ap.add_argument('--ifindex', help='force ifindex', default=-1)
+    parser_ap.add_argument('--iface', help='interface name', default=None)
+    parser_ap.add_argument('args', nargs='*')
+    parser_ap.set_defaults(func=do_ap)
+    
+    opts = parser.parse_args()
+
+    try:
+        opts.func(opts);
+    except AP.NoIface:
+        print("Inferface needed:")
+        do_list(opts)
+    
 
 
 if __name__ == "__main__":
