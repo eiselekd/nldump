@@ -215,6 +215,33 @@ NL80211_map = {
     NL80211_CMD_WIPHY_REG_CHANGE : 'NL80211_CMD_WIPHY_REG_CHANGE'
 }
 
+GENCTRL_VALUES = {
+    CTRL_CMD_UNSPEC : 'CTRL_CMD_UNSPEC',
+    CTRL_CMD_NEWFAMILY : 'CTRL_CMD_NEWFAMILY',
+    CTRL_CMD_DELFAMILY : 'CTRL_CMD_DELFAMILY',
+    CTRL_CMD_GETFAMILY : 'CTRL_CMD_GETFAMILY',
+    CTRL_CMD_NEWOPS : 'CTRL_CMD_NEWOPS',
+    CTRL_CMD_DELOPS : 'CTRL_CMD_DELOPS',
+    CTRL_CMD_GETOPS : 'CTRL_CMD_GETOPS',
+    CTRL_CMD_NEWMCAST_GRP : 'CTRL_CMD_NEWMCAST_GRP',
+    CTRL_CMD_DELMCAST_GRP : 'CTRL_CMD_DELMCAST_GRP'
+};
+
+GENCTRL_NAMES = {
+    'CTRL_CMD_UNSPEC':       CTRL_CMD_UNSPEC,
+    'CTRL_CMD_NEWFAMILY':    CTRL_CMD_NEWFAMILY,
+    'CTRL_CMD_DELFAMILY':    CTRL_CMD_DELFAMILY,
+    'CTRL_CMD_GETFAMILY':    CTRL_CMD_GETFAMILY,
+    'CTRL_CMD_NEWOPS':       CTRL_CMD_NEWOPS,      
+    'CTRL_CMD_DELOPS':       CTRL_CMD_DELOPS,       
+    'CTRL_CMD_GETOPS':       CTRL_CMD_GETOPS,       
+    'CTRL_CMD_NEWMCAST_GRP': CTRL_CMD_NEWMCAST_GRP, 
+    'CTRL_CMD_DELMCAST_GRP': CTRL_CMD_DELMCAST_GRP 
+};
+
+def error(a):
+    sys.stderr.write(a+"\n")
+    exit(1)
 
 for fn in opts.files:
 
@@ -233,28 +260,52 @@ for fn in opts.files:
     inbox = []
 
     while offset < len(data):
-        if (proto == 0):
-            typ, = struct.unpack_from("h",data,offset+4)
-            flg, = struct.unpack_from("h",data,offset+6)
-            msg = genlmsg(data[offset:]);
-
+        typ, = struct.unpack_from("h",data,offset+4)
+        flg, = struct.unpack_from("h",data,offset+6)
+        met=None
+        cmd=None
+        # select decoder
+        if (proto==0):
+            # routing protocol
             if typ in msg_map:
+                if (opts.verbose):
+                    print("Lookup routing protocol %s(%d)" %(RTM_VALUES[typ],typ))
                 met = msg_map[typ]
             else:
-                met = genlmsg
-        elif (proto == 16):
-            m = import_module('pyroute2.netlink.nl80211')
-            met = nl80211cmd
+                error("--------- Unknown router cmd %d --------" %(typ))
+        elif (proto==16):
+            if (typ==16):
+                # ctrl messages
+                cmd, = struct.unpack_from("B",data,offset+16)
+                if (opts.verbose):
+                    print("Lookup generic protocol %s(%d)" %(GENCTRL_VALUES[cmd],cmd))
+                met = ctrlmsg
+            elif (typ==28):
+                # nl80211 messages
+                m = import_module('pyroute2.netlink.nl80211')
+                met = nl80211cmd
+            else:
+                print("--------- Generic protocol type %d unimpl --------" %(typ))
         else:
+            print("--------- unimpl protocol cmd %d --------" %(proto))
+                
+
+        if (met == None):
             met = genlmsg
 
         msg = met(data[offset:])
         msg.decode()
 
+        # add some extra info
         if not (opts.nodecode):
             if (proto == 16):
-                if 'cmd' in msg and msg['cmd'] in NL80211_map:
-                    msg['cmd'] = NL80211_map[msg['cmd']]
+                if (typ == 28):
+                    if 'cmd' in msg and msg['cmd'] in NL80211_map:
+                        msg['cmd'] = NL80211_map[msg['cmd']]
+                if (typ == 16):
+                    if cmd != None and cmd in GENCTRL_VALUES:
+                        msg['cmd'] = GENCTRL_VALUES[cmd]
+                
             elif (proto == 0):
                 if msg['header']['type'] in RTM_VALUES:
                     msg['cmd'] = RTM_VALUES[msg['header']['type']]
@@ -280,6 +331,8 @@ for fn in opts.files:
                 fa.append("0x%x" %(f))
             msg['header']['flags'] = "|".join(fa)
 
+
+            
         o = pprint.pformat(msg)
         o2 = ""
         if (direction == 'snd'):
