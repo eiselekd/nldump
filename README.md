@@ -28,6 +28,10 @@ is given then [prog file] is called when a netlink packet is discovered.
 
    ./strace -n "python script/decoder.py" ip -6 route
 
+Build on Ubuntu:
+
+   cd strace-4.15; DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -us -uc -nc
+
 Example:
 
 ```c
