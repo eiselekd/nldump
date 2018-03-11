@@ -24,7 +24,7 @@ Modified strace
 
 Patched version of strace in under directory strace-4.15.
 It will dump netlink packets under /tmp/nl* . If the option -n prog
-is given then [prog file] is called on when a netlink packet is discovered.
+is given then [prog file] is called when a netlink packet is discovered.
 
    ./strace -n "python script/decoder.py" ip -6 route
 
