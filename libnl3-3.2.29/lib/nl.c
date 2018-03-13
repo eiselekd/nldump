@@ -328,6 +328,7 @@ int nl_sendmsg(struct nl_sock *sk, struct nl_msg *msg, struct msghdr *hdr)
 {
 	struct nl_cb *cb;
 	int ret;
+	char *decode;
 
 	if (sk->s_fd < 0)
 		return -NLE_BAD_SOCK;
@@ -338,6 +339,13 @@ int nl_sendmsg(struct nl_sock *sk, struct nl_msg *msg, struct msghdr *hdr)
 	if (cb->cb_set[NL_CB_MSG_OUT])
 		if ((ret = nl_cb_call(cb, NL_CB_MSG_OUT, msg)) != NL_OK)
 			return ret;
+
+	/* vvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
+	decode = getenv("NLDECODE");
+	if (decode) {
+		nlmsg_decode_call(decode, msg, "snd");
+	}
+	/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 	ret = sendmsg(sk->s_fd, hdr, 0);
 	if (ret < 0) {
@@ -455,6 +463,13 @@ int nl_send(struct nl_sock *sk, struct nl_msg *msg)
 			.iov_base = (void *) nlmsg_hdr(msg),
 			.iov_len = nlmsg_hdr(msg)->nlmsg_len,
 		};
+
+		/* vvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
+		decode = getenv("NLDECODE");
+		if (decode) {
+			nlmsg_decode_call(decode, msg, "snd");
+		}
+		/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 		return nl_send_iovec(sk, msg, &iov, 1);
 	}
@@ -835,6 +850,7 @@ static int recvmsgs(struct nl_sock *sk, struct nl_cb *cb)
 	struct sockaddr_nl nla = {0};
 	struct nl_msg *msg = NULL;
 	struct ucred *creds = NULL;
+	char *decode;
 
 continue_reading:
 	NL_DBG(3, "Attempting to read from %p\n", sk);
@@ -865,6 +881,13 @@ continue_reading:
 			nlmsg_set_creds(msg, creds);
 
 		nrecv++;
+
+		/* vvvvvvvvvvvvvvvvvvvvvvvvvvvvv*/
+		decode = getenv("NLDECODE");
+		if (decode) {
+			nlmsg_decode_call(decode, msg, "rec");
+		}
+		/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 		/* Raw callback is the first, it gives the most control
 		 * to the user and he can do his very own parsing. */

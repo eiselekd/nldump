@@ -23,7 +23,7 @@ libnl_3_la_DEPENDENCIES = \
 libnl_3_la_SOURCES = \
 	addr.c attr.c cache.c cache_mngr.c cache_mngt.c data.c \
 	error.c handlers.c msg.c nl.c object.c socket.c utils.c \
-	version.c hash.c hashtable.c
+	version.c hash.c hashtable.c decode.c
 
 libnl_idiag_3_la_LIBADD = libnl-3.la
 libnl_idiag_3_la_LDFLAGS = \
