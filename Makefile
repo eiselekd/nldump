@@ -64,3 +64,7 @@ hostapd:
 
 hostapd-clean:
 	cd wpa-2.4/hostapd; make clean
+
+
+hostapd-start:
+	NLDECODE=ls $(CURDIR)/wpa-2.4/hostapd/hostapd ./hostapd_no.conf
