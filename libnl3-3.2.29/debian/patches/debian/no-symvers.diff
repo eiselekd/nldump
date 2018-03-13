@@ -1,0 +1,105 @@
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] Disable symbol versioning
+
+libnl3 after 3.2.21 enabled symbol versioning [0] without increasing the
+soname of the library, producing issues with our symbol lists.
+
+Until we hit a regular soname bump, it might be easiest to keep symbol
+versioning disabled.
+
+
+[0] https://github.com/thom311/libnl/commit/0eb665c693ab2673b722ffd75df744f75fb7e2fe
+---
+ lib/Makefile.am     | 22 ++++++++--------------
+ src/lib/Makefile.am |  3 +--
+ 2 files changed, 9 insertions(+), 16 deletions(-)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 46b4a96..d69e00c 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -10,15 +10,14 @@ AM_CPPFLAGS  =			 	\
+ 	-D_GNU_SOURCE \
+ 	-DSYSCONFDIR=\"$(sysconfdir)/libnl-3\"
+ 
+-AM_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
++#AM_LDFLAGS = \
++#	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ 
+ lib_LTLIBRARIES = \
+ 	libnl-3.la libnl-genl-3.la libnl-route-3.la libnl-nf-3.la libnl-idiag-3.la libnl-xfrm-3.la
+ 
+ libnl_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_3_la_DEPENDENCIES = \
+ 	$(top_srcdir)/libnl-3.sym
+ libnl_3_la_SOURCES = \
+@@ -28,8 +27,7 @@ libnl_3_la_SOURCES = \
+ 
+ libnl_idiag_3_la_LIBADD = libnl-3.la
+ libnl_idiag_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-idiag-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_idiag_3_la_DEPENDENCIES = \
+ 	libnl-3.la \
+ 	$(top_srcdir)/libnl-idiag-3.sym
+@@ -39,8 +37,7 @@ libnl_idiag_3_la_SOURCES = \
+ 
+ libnl_genl_3_la_LIBADD  = libnl-3.la
+ libnl_genl_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-genl-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_genl_3_la_DEPENDENCIES = \
+ 	libnl-3.la \
+ 	$(top_srcdir)/libnl-genl-3.sym
+@@ -49,8 +46,7 @@ libnl_genl_3_la_SOURCES = \
+ 
+ libnl_nf_3_la_LIBADD  = libnl-route-3.la
+ libnl_nf_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-nf-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_nf_3_la_DEPENDENCIES = \
+ 	libnl-route-3.la \
+ 	$(top_srcdir)/libnl-nf-3.sym
+@@ -83,8 +79,7 @@ route/cls/ematch_syntax.c: route/cls/ematch_syntax.y
+ 
+ libnl_route_3_la_LIBADD  = libnl-3.la
+ libnl_route_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-route-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_route_3_la_DEPENDENCIES = \
+ 	libnl-3.la \
+ 	$(top_srcdir)/libnl-route-3.sym
+@@ -142,8 +137,7 @@ EXTRA_DIST = \
+ 
+ libnl_xfrm_3_la_LIBADD  = libnl-3.la
+ libnl_xfrm_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-xfrm-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_xfrm_3_la_DEPENDENCIES = \
+ 	libnl-3.la \
+ 	$(top_srcdir)/libnl-xfrm-3.sym
+diff --git a/src/lib/Makefile.am b/src/lib/Makefile.am
+index eb074a6..f3e1387 100644
+--- a/src/lib/Makefile.am
++++ b/src/lib/Makefile.am
+@@ -42,8 +42,7 @@ lib_LTLIBRARIES = \
+ 	libnl-cli-3.la
+ 
+ libnl_cli_3_la_LDFLAGS = \
+-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+-	-Wl,--version-script=$(top_srcdir)/libnl-cli-3.sym
++	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+ libnl_cli_3_la_DEPENDENCIES = \
+ 	$(top_srcdir)/libnl-cli-3.sym
+ 
+-- 
+tg: (971f661..) debian/no-symvers (depends on: upstream-dist debian/etc-libnl-3)

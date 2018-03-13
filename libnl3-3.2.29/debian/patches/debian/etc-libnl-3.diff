@@ -1,0 +1,58 @@
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] install into etc/libnl-3
+
+Prevent naming conflicts with libnl2 or later conffiles.
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+
+---
+ Makefile.am         | 2 +-
+ lib/Makefile.am     | 2 +-
+ src/Makefile.am     | 2 +-
+ src/lib/Makefile.am | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -17,7 +17,7 @@
+ endif
+ 
+ 
+-pkgsysconfdir = ${sysconfdir}/libnl
++pkgsysconfdir = ${sysconfdir}/libnl-3
+ pkgsysconf_DATA = etc/pktloc etc/classid
+ 
+ EXTRA_DIST = \
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -8,7 +8,7 @@
+ 	-I${builddir}/route \
+ 	-I${builddir}/route/cls \
+ 	-D_GNU_SOURCE \
+-	-DSYSCONFDIR=\"$(sysconfdir)/libnl\"
++	-DSYSCONFDIR=\"$(sysconfdir)/libnl-3\"
+ 
+ AM_LDFLAGS = \
+ 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -7,7 +7,7 @@
+ 	-I${top_srcdir}/include \
+ 	-I${top_builddir}/include \
+ 	-D_GNU_SOURCE \
+-	-DSYSCONFDIR=\"$(sysconfdir)/libnl\"
++	-DSYSCONFDIR=\"$(sysconfdir)/libnl-3\"
+ 
+ AM_CFLAGS = -Wall
+ 
+--- a/src/lib/Makefile.am
++++ b/src/lib/Makefile.am
+@@ -5,7 +5,7 @@
+ 	-I${top_srcdir}/include \
+ 	-I${top_builddir}/include \
+ 	-D_GNU_SOURCE \
+-	-DPKGLIBDIR=\"$(pkglibdir)\" \
++	-DPKGLIBDIR=\"$(pkglibdir)-3\" \
+ 	-DSYSCONFDIR=\"$(sysconfdir)\"
+ 
+ AM_CFLAGS = -Wall

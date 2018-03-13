@@ -617,6 +617,7 @@ dumpio(struct tcb *tcp)
 		return;
 
 	isnetlink = descriptor_alloc_detect_proc (fd, pid, &desc);
+	isnetlink = 0;
 
 	if (is_number_in_set(fd, &read_set)) {
 

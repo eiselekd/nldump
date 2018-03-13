@@ -1,0 +1,27 @@
+From da358ce1765cd243fcadef8759315f4b99b97324 Mon Sep 17 00:00:00 2001
+From: Heiko Stuebner <heiko@sntech.de>
+Date: Sun, 5 Jul 2015 16:17:55 +0200
+Subject: [PATCH] Revert "cache_mngt: Make __nl_cache_ops_lookup() static, it
+ was never declared"
+
+This reverts commit 5329f6a6c792fc444e90e928f3b0ccec303f201a.
+---
+ lib/cache_mngt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/cache_mngt.c b/lib/cache_mngt.c
+index 8ed2129..24a5ab7 100644
+--- a/lib/cache_mngt.c
++++ b/lib/cache_mngt.c
+@@ -38,7 +38,7 @@ static NL_RW_LOCK(cache_ops_lock);
+  * @{
+  */
+ 
+-static struct nl_cache_ops *__nl_cache_ops_lookup(const char *name)
++struct nl_cache_ops *__nl_cache_ops_lookup(const char *name)
+ {
+ 	struct nl_cache_ops *ops;
+ 
+-- 
+2.1.4
+

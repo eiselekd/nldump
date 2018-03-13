@@ -1,0 +1,28 @@
+From commit 20ed636dee408d5fb288c400394342e619a55559
+Author: Thomas Haller <thaller@redhat.com>
+Date:   Tue Jan 17 18:16:11 2017 +0100
+
+    sriov: avoid buffer overrun in rtnl_link_sriov_parse_vflist()
+
+    Fixes: 5d6e43ebef12deadf31fccfa46c0b34892675d36
+
+    Signed-off-by: Thomas Haller <thaller@redhat.com>
+
+Origin: https://github.com/thom311/libnl/commit/20ed636dee408d5fb288c400394342e619a55559
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1673491
+Last-Update: 2017-03-17
+
+Patch-Name: ubuntu/sriov-avoid-buffer-overrun-in-rtnl_link_sriov_parse_vflist.patch
+diff --git a/lib/route/link/sriov.c b/lib/route/link/sriov.c
+index 3721ae8..b4bc9a7 100644
+--- a/lib/route/link/sriov.c
++++ b/lib/route/link/sriov.c
+@@ -568,6 +568,8 @@ int rtnl_link_sriov_parse_vflist(struct rtnl_link *link, struct nlattr **tb) {
+ 			list_len = 0;
+ 			nla_for_each_nested(nla_list, t[IFLA_VF_VLAN_LIST],
+ 					    list_rem) {
++				if (list_len >= MAX_VLAN_LIST_LEN)
++					break;
+ 				vf_vlan_info[list_len] = nla_data(nla_list);
+ 				list_len++;
+ 			}

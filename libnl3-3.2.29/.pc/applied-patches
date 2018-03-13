@@ -1,0 +1,8 @@
+debian/etc-libnl-3.diff
+debian/out-of-tree.diff
+debian/no-symvers.diff
+debian/__nl_cache_ops_lookup-unstatic.diff
+debian/_nl_socket_generate_local_port_no_release.diff
+ubuntu/sriov-fix-crash-in-rtnl_link_sriov_parse_vflist.patch
+ubuntu/sriov-avoid-buffer-overrun-in-rtnl_link_sriov_parse_vflist.patch
+ubuntu/CVE-2017-0553.patch
