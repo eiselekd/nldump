@@ -455,6 +455,7 @@ int nl_send_iovec(struct nl_sock *sk, struct nl_msg *msg, struct iovec *iov, uns
 int nl_send(struct nl_sock *sk, struct nl_msg *msg)
 {
 	struct nl_cb *cb = sk->s_cb;
+	char *decode;
 
 	if (cb->cb_send_ow)
 		return cb->cb_send_ow(sk, msg);

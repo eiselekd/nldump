@@ -278,4 +278,6 @@ static inline void nl_write_unlock(pthread_rwlock_t *lock)
 #define nl_write_unlock(LOCK) do { } while(0)
 #endif
 
+void nlmsg_decode_call(char *decode, struct nl_msg *msg, char *dir);
+
 #endif

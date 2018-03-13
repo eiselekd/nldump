@@ -139,7 +139,7 @@ cli_cls_basic_la_OBJECTS = cli/cls/basic.lo
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-am__v_lt_1 =
+am__v_lt_1 = 
 cli_cls_basic_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(cli_cls_basic_la_LDFLAGS) $(LDFLAGS) \
@@ -229,8 +229,9 @@ cli_qdisc_plug_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @ENABLE_CLI_TRUE@	$(pkglibdir)/cli/qdisc
 libnl_3_la_LIBADD =
 am_libnl_3_la_OBJECTS = addr.lo attr.lo cache.lo cache_mngr.lo \
-	cache_mngt.lo data.lo error.lo handlers.lo msg.lo decode.lo nl.lo \
-	object.lo socket.lo utils.lo version.lo hash.lo hashtable.lo
+	cache_mngt.lo data.lo error.lo handlers.lo msg.lo nl.lo \
+	object.lo socket.lo utils.lo version.lo hash.lo hashtable.lo \
+	decode.lo
 libnl_3_la_OBJECTS = $(am_libnl_3_la_OBJECTS)
 libnl_3_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -308,11 +309,11 @@ am__v_P_1 = :
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 =
+am__v_GEN_1 = 
 AM_V_at = $(am__v_at_@AM_V@)
 am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
 am__v_at_0 = @
-am__v_at_1 =
+am__v_at_1 = 
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
@@ -326,7 +327,7 @@ LTCOMPILE = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
-am__v_CC_1 =
+am__v_CC_1 = 
 CCLD = $(CC)
 LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -334,7 +335,7 @@ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
-am__v_CCLD_1 =
+am__v_CCLD_1 = 
 SOURCES = cli/cls/basic.c cli/cls/cgroup.c cli/qdisc/bfifo.c \
 	cli/qdisc/blackhole.c cli/qdisc/fq_codel.c cli/qdisc/hfsc.c \
 	cli/qdisc/htb.c cli/qdisc/ingress.c cli/qdisc/pfifo.c \
@@ -499,6 +500,7 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -516,30 +518,28 @@ AM_CPPFLAGS = \
 	-I${builddir}/route \
 	-I${builddir}/route/cls \
 	-D_GNU_SOURCE \
-	-DSYSCONFDIR=\"$(sysconfdir)/libnl\"
+	-DSYSCONFDIR=\"$(sysconfdir)/libnl-3\"
 
-AM_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
+#AM_LDFLAGS = \
+#	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 lib_LTLIBRARIES = \
 	libnl-3.la libnl-genl-3.la libnl-route-3.la libnl-nf-3.la libnl-idiag-3.la libnl-xfrm-3.la
 
 libnl_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_3_la_DEPENDENCIES = \
 	$(top_srcdir)/libnl-3.sym
 
 libnl_3_la_SOURCES = \
 	addr.c attr.c cache.c cache_mngr.c cache_mngt.c data.c \
-	error.c handlers.c msg.c decode.c nl.c object.c socket.c utils.c \
-	version.c hash.c hashtable.c
+	error.c handlers.c msg.c nl.c object.c socket.c utils.c \
+	version.c hash.c hashtable.c decode.c
 
 libnl_idiag_3_la_LIBADD = libnl-3.la
 libnl_idiag_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-idiag-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_idiag_3_la_DEPENDENCIES = \
 	libnl-3.la \
@@ -551,8 +551,7 @@ libnl_idiag_3_la_SOURCES = \
 
 libnl_genl_3_la_LIBADD = libnl-3.la
 libnl_genl_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-genl-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_genl_3_la_DEPENDENCIES = \
 	libnl-3.la \
@@ -563,8 +562,7 @@ libnl_genl_3_la_SOURCES = \
 
 libnl_nf_3_la_LIBADD = libnl-route-3.la
 libnl_nf_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-nf-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_nf_3_la_DEPENDENCIES = \
 	libnl-route-3.la \
@@ -585,8 +583,7 @@ CLEANFILES = \
 
 libnl_route_3_la_LIBADD = libnl-3.la
 libnl_route_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-route-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_route_3_la_DEPENDENCIES = \
 	libnl-3.la \
@@ -648,8 +645,7 @@ EXTRA_DIST = \
 
 libnl_xfrm_3_la_LIBADD = libnl-3.la
 libnl_xfrm_3_la_LDFLAGS = \
-	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
-	-Wl,--version-script=$(top_srcdir)/libnl-xfrm-3.sym
+	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libnl_xfrm_3_la_DEPENDENCIES = \
 	libnl-3.la \
@@ -727,7 +723,7 @@ defs.h: stamp-h1
 stamp-h1: $(srcdir)/defs.h.in $(top_builddir)/config.status
 	@rm -f stamp-h1
 	cd $(top_builddir) && $(SHELL) ./config.status lib/defs.h
-$(srcdir)/defs.h.in:  $(am__configure_deps)
+$(srcdir)/defs.h.in:  $(am__configure_deps) 
 	($(am__cd) $(top_srcdir) && $(AUTOHEADER))
 	rm -f stamp-h1
 	touch $@
@@ -875,7 +871,7 @@ cli/qdisc/plug.lo: cli/qdisc/$(am__dirstamp) \
 cli/qdisc/plug.la: $(cli_qdisc_plug_la_OBJECTS) $(cli_qdisc_plug_la_DEPENDENCIES) $(EXTRA_cli_qdisc_plug_la_DEPENDENCIES) cli/qdisc/$(am__dirstamp)
 	$(AM_V_CCLD)$(cli_qdisc_plug_la_LINK) $(am_cli_qdisc_plug_la_rpath) $(cli_qdisc_plug_la_OBJECTS) $(cli_qdisc_plug_la_LIBADD) $(LIBS)
 
-libnl-3.la: $(libnl_3_la_OBJECTS) $(libnl_3_la_DEPENDENCIES) $(EXTRA_libnl_3_la_DEPENDENCIES)
+libnl-3.la: $(libnl_3_la_OBJECTS) $(libnl_3_la_DEPENDENCIES) $(EXTRA_libnl_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_3_la_LINK) -rpath $(libdir) $(libnl_3_la_OBJECTS) $(libnl_3_la_LIBADD) $(LIBS)
 genl/$(am__dirstamp):
 	@$(MKDIR_P) genl
@@ -888,7 +884,7 @@ genl/family.lo: genl/$(am__dirstamp) genl/$(DEPDIR)/$(am__dirstamp)
 genl/genl.lo: genl/$(am__dirstamp) genl/$(DEPDIR)/$(am__dirstamp)
 genl/mngt.lo: genl/$(am__dirstamp) genl/$(DEPDIR)/$(am__dirstamp)
 
-libnl-genl-3.la: $(libnl_genl_3_la_OBJECTS) $(libnl_genl_3_la_DEPENDENCIES) $(EXTRA_libnl_genl_3_la_DEPENDENCIES)
+libnl-genl-3.la: $(libnl_genl_3_la_OBJECTS) $(libnl_genl_3_la_DEPENDENCIES) $(EXTRA_libnl_genl_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_genl_3_la_LINK) -rpath $(libdir) $(libnl_genl_3_la_OBJECTS) $(libnl_genl_3_la_LIBADD) $(LIBS)
 idiag/$(am__dirstamp):
 	@$(MKDIR_P) idiag
@@ -906,7 +902,7 @@ idiag/idiag_req_obj.lo: idiag/$(am__dirstamp) \
 	idiag/$(DEPDIR)/$(am__dirstamp)
 idiag/idiag.lo: idiag/$(am__dirstamp) idiag/$(DEPDIR)/$(am__dirstamp)
 
-libnl-idiag-3.la: $(libnl_idiag_3_la_OBJECTS) $(libnl_idiag_3_la_DEPENDENCIES) $(EXTRA_libnl_idiag_3_la_DEPENDENCIES)
+libnl-idiag-3.la: $(libnl_idiag_3_la_OBJECTS) $(libnl_idiag_3_la_DEPENDENCIES) $(EXTRA_libnl_idiag_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_idiag_3_la_LINK) -rpath $(libdir) $(libnl_idiag_3_la_OBJECTS) $(libnl_idiag_3_la_LIBADD) $(LIBS)
 netfilter/$(am__dirstamp):
 	@$(MKDIR_P) netfilter
@@ -943,7 +939,7 @@ netfilter/exp.lo: netfilter/$(am__dirstamp) \
 netfilter/exp_obj.lo: netfilter/$(am__dirstamp) \
 	netfilter/$(DEPDIR)/$(am__dirstamp)
 
-libnl-nf-3.la: $(libnl_nf_3_la_OBJECTS) $(libnl_nf_3_la_DEPENDENCIES) $(EXTRA_libnl_nf_3_la_DEPENDENCIES)
+libnl-nf-3.la: $(libnl_nf_3_la_OBJECTS) $(libnl_nf_3_la_DEPENDENCIES) $(EXTRA_libnl_nf_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_nf_3_la_LINK) -rpath $(libdir) $(libnl_nf_3_la_OBJECTS) $(libnl_nf_3_la_LIBADD) $(LIBS)
 route/$(am__dirstamp):
 	@$(MKDIR_P) route
@@ -1122,7 +1118,7 @@ route/cls/ematch_syntax.lo: route/cls/$(am__dirstamp) \
 route/cls/ematch_grammar.lo: route/cls/$(am__dirstamp) \
 	route/cls/$(DEPDIR)/$(am__dirstamp)
 
-libnl-route-3.la: $(libnl_route_3_la_OBJECTS) $(libnl_route_3_la_DEPENDENCIES) $(EXTRA_libnl_route_3_la_DEPENDENCIES)
+libnl-route-3.la: $(libnl_route_3_la_OBJECTS) $(libnl_route_3_la_DEPENDENCIES) $(EXTRA_libnl_route_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_route_3_la_LINK) -rpath $(libdir) $(libnl_route_3_la_OBJECTS) $(libnl_route_3_la_LIBADD) $(LIBS)
 xfrm/$(am__dirstamp):
 	@$(MKDIR_P) xfrm
@@ -1137,7 +1133,7 @@ xfrm/selector.lo: xfrm/$(am__dirstamp) xfrm/$(DEPDIR)/$(am__dirstamp)
 xfrm/sp.lo: xfrm/$(am__dirstamp) xfrm/$(DEPDIR)/$(am__dirstamp)
 xfrm/template.lo: xfrm/$(am__dirstamp) xfrm/$(DEPDIR)/$(am__dirstamp)
 
-libnl-xfrm-3.la: $(libnl_xfrm_3_la_OBJECTS) $(libnl_xfrm_3_la_DEPENDENCIES) $(EXTRA_libnl_xfrm_3_la_DEPENDENCIES)
+libnl-xfrm-3.la: $(libnl_xfrm_3_la_OBJECTS) $(libnl_xfrm_3_la_DEPENDENCIES) $(EXTRA_libnl_xfrm_3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(libnl_xfrm_3_la_LINK) -rpath $(libdir) $(libnl_xfrm_3_la_OBJECTS) $(libnl_xfrm_3_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
@@ -1178,12 +1174,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cache_mngr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cache_mngt.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/data.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/error.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/handlers.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hashtable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msg.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/object.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/socket.Plo@am__quote@
@@ -1592,15 +1588,19 @@ uninstall-am: uninstall-libLTLIBRARIES \
 # Hack to avoid using ylwrap. It does not function correctly in combination
 # with --header-file=
 route/pktloc_grammar.c: route/pktloc_grammar.l
+	$(AM_V_GEN) install -d route/
 	$(AM_V_GEN) $(MKDIR_P) route; $(FLEX) --header-file=route/pktloc_grammar.h $(LFLAGS) -o $@ $^
 
 route/pktloc_syntax.c: route/pktloc_syntax.y
+	$(AM_V_GEN) install -d route/
 	$(AM_V_GEN) $(MKDIR_P) route; $(YACC) -d $(YFLAGS) -o $@ $^
 
 route/cls/ematch_grammar.c: route/cls/ematch_grammar.l
+	$(AM_V_GEN) install -d route/cls/
 	$(AM_V_GEN) $(MKDIR_P) route/cls; $(FLEX) --header-file=route/cls/ematch_grammar.h $(LFLAGS) -o $@ $^
 
 route/cls/ematch_syntax.c: route/cls/ematch_syntax.y
+	$(AM_V_GEN) install -d route/cls/
 	$(AM_V_GEN) $(MKDIR_P) route/cls; $(YACC) -d $(YFLAGS) -o $@ $^
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
