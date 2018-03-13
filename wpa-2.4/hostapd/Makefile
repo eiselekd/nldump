@@ -885,6 +885,8 @@ OBJS += ../src/ap/acs.o
 LIBS += -lm
 endif
 
+LIBS += -lpthread
+
 ifdef CONFIG_NO_STDOUT_DEBUG
 CFLAGS += -DCONFIG_NO_STDOUT_DEBUG
 endif
